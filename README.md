@@ -1,0 +1,2 @@
+# nim
+Jeu de Nim
