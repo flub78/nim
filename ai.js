@@ -11,6 +11,14 @@ function initTable(maxTokens) {
   }
 }
 
+// Ajoute les entrées manquantes sans effacer les valeurs existantes.
+// Utilisé quand la taille de pile change après initialisation.
+function extendTable(maxTokens) {
+  for (let t = 1; t <= maxTokens; t++) {
+    if (!table[t]) table[t] = { 1: 0, 2: 0, 3: 0 };
+  }
+}
+
 function isValidMove(tokens, taken) {
   return taken >= 1 && taken <= 3 && taken <= tokens;
 }

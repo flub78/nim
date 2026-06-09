@@ -270,11 +270,11 @@ function init() {
     startNewGame();
   });
 
-  // Changement de taille de pile
+  // Changement de taille de pile : étendre la table sans effacer les valeurs
   document.getElementById('input-tokens').addEventListener('change', e => {
     const val = Math.min(30, Math.max(5, parseInt(e.target.value, 10)));
     e.target.value = val;
-    initTable(val);
+    extendTable(val);
     startNewGame();
   });
 
@@ -303,6 +303,21 @@ function init() {
   // Bouton Nouvelle partie
   document.getElementById('btn-new-game').addEventListener('click', startNewGame);
 
+  // Bouton Réinitialiser l'apprentissage
+  document.getElementById('btn-reset-table').addEventListener('click', () => {
+    const maxTokens = parseInt(document.getElementById('input-tokens').value, 10);
+    initTable(maxTokens);
+    totalGames = 0;
+    humanAiGames = 0;
+    humanAiWins = 0;
+    scores.p1 = 0;
+    scores.p2 = 0;
+    document.getElementById('train-progress').textContent = '';
+    renderEvalTable();
+    renderScore();
+    renderIndicators();
+  });
+
   // Bouton Entraînement
   document.getElementById('btn-train').addEventListener('click', () => {
     const n = parseInt(document.getElementById('input-train-n').value, 10);
@@ -312,15 +327,18 @@ function init() {
     const progressEl = document.getElementById('train-progress');
     document.getElementById('btn-train').disabled = true;
     document.getElementById('btn-new-game').disabled = true;
+    document.getElementById('btn-reset-table').disabled = true;
 
     runTraining(n, maxTokens, (i, done) => {
       if (!done) totalGames++;
       progressEl.textContent = done ? `Entraînement terminé (${n} parties).` : `Partie ${i} / ${n}…`;
-      renderEvalTable();
+      // Throttle : ne re-rendre la table que toutes les 10 parties (ou à la fin)
+      if (done || i % 10 === 0) renderEvalTable();
       renderIndicators();
       if (done) {
         document.getElementById('btn-train').disabled = false;
         document.getElementById('btn-new-game').disabled = false;
+        document.getElementById('btn-reset-table').disabled = false;
       }
     });
   });
