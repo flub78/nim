@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jeu de Nim — Apprentissage automatique</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<h1>Jeu de Nim</h1>
+
+<div class="layout">
+
+  <!-- ─── Colonne gauche : jeu ──────────────────────────────────────────────── -->
+  <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+    <!-- Configuration -->
+    <div class="panel">
+      <h2>Configuration</h2>
+      <div class="config-grid">
+        <label for="select-mode">Mode</label>
+        <select id="select-mode">
+          <option value="human-ai">Joueur vs IA</option>
+          <option value="human-human">Joueur vs Joueur</option>
+          <option value="ai-ai">Entraînement IA</option>
+        </select>
+
+        <label for="input-tokens">Jetons</label>
+        <input type="number" id="input-tokens" value="10" min="5" max="30" />
+
+        <label for="select-first">Qui commence</label>
+        <select id="select-first">
+          <option value="human">Joueur</option>
+          <option value="ai">IA</option>
+        </select>
+      </div>
+
+      <!-- Section entraînement (visible uniquement en mode ai-ai) -->
+      <div id="training-section" style="display:none; flex-direction:column; gap:0.5rem;">
+        <div class="train-controls">
+          <label for="input-train-n">Parties à jouer :</label>
+          <input type="number" id="input-train-n" value="10" min="1" max="10000" />
+          <button class="btn-primary" id="btn-train">Lancer l'entraînement</button>
+        </div>
+        <div id="train-progress"></div>
+      </div>
+    </div>
+
+    <!-- Pile -->
+    <div class="panel">
+      <h2>Pile de jetons</h2>
+      <div id="pile"></div>
+    </div>
+
+    <!-- Statut et actions -->
+    <div class="panel">
+      <div id="status"></div>
+      <div class="action-buttons">
+        <button class="btn-take" id="btn-take-1">Retirer 1</button>
+        <button class="btn-take" id="btn-take-2">Retirer 2</button>
+        <button class="btn-take" id="btn-take-3">Retirer 3</button>
+      </div>
+      <div class="global-controls">
+        <button class="btn-primary" id="btn-new-game">Nouvelle partie</button>
+      </div>
+    </div>
+
+    <!-- Score -->
+    <div class="panel" id="score-section">
+      <h2>Score</h2>
+      <div class="score-grid">
+        <div class="score-box">
+          <div class="score-label" id="score-p1-label">Joueur</div>
+          <div class="score-value" id="score-p1-value">0</div>
+        </div>
+        <div class="score-box">
+          <div class="score-label" id="score-p2-label">IA</div>
+          <div class="score-value" id="score-p2-value">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicateurs pédagogiques -->
+    <div class="panel">
+      <h2>Apprentissage</h2>
+      <div class="indicators-grid">
+        <div class="indicator-box">
+          <div class="indicator-label">Parties jouées</div>
+          <div class="indicator-value" id="total-games">0</div>
+        </div>
+        <div class="indicator-box">
+          <div class="indicator-label">Victoires IA (Joueur vs IA)</div>
+          <div class="indicator-value" id="ai-win-rate">—</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── Colonne droite : table d'évaluation ───────────────────────────────── -->
+  <div class="panel">
+    <h2>Table d'évaluation</h2>
+    <p style="font-size:0.8rem; color:#6b7280; margin-bottom:0.5rem;">
+      Valeur de chaque coup selon le nombre de jetons restants.
+      <span style="color:#4ade80">■ positif</span> ·
+      <span style="color:#f87171">■ négatif</span> ·
+      <span style="color:#6b7280">■ neutre</span> ·
+      <span style="color:#374151; background:#000; padding:0 3px;">■</span> impossible
+    </p>
+    <div id="eval-table"></div>
+  </div>
+
+</div>
+
+<script src="game.js"></script>
+<script src="ai.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
